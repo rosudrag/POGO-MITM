@@ -1,0 +1,26 @@
+{
+  "name": "pokemon-go-mitm",
+  "version": "1.3.0",
+  "description": "Pokemon Go MITM proxy",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rastapasta/pokemon-go-mitm-node.git"
+  },
+  "author": "Michael Strassburger <codepoet@cpan.org>",
+  "license": "MIT",
+  "dependencies": {
+    "change-case": "^3.0.0",
+    "coffee-script": "^1.10.0",
+    "http-mitm-proxy": "^0.5.1",
+    "lodash": "^4.13.1",
+    "pokemongo-protobuf": "^1.4.0"
+  },
+  "devDependencies": {
+    "geodesy": "^1.1.0",
+    "moment": "^2.14.1"
+  }
+}
