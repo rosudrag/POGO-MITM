@@ -60,7 +60,7 @@ server = new PokemonGoMITM port: 8081
 		data.description = info
 		data
 
-# Populate some neat info about the pokemon's whereabouts 
+# Populate some neat info about the pokemon's whereabouts
 pokemonInfo = (pokemon) ->
 	console.log pokemon
 	name = changeCase.titleCase pokemon.data.pokemon_id

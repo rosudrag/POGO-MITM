@@ -8,6 +8,7 @@ POGOProtos = require 'pokemongo-protobuf'
 changeCase = require 'change-case'
 fs = require 'fs'
 _ = require 'lodash'
+datetime = require 'node-datetime';
 
 class PokemonGoMITM
   responseEnvelope: 'POGOProtos.Networking.Envelopes.ResponseEnvelope'
@@ -34,6 +35,10 @@ class PokemonGoMITM
     console.log "[+++] PokemonGo MITM Proxy listening on #{@port}"
     console.log "[!] Make sure to have the CA cert .http-mitm-proxy/certs/ca.pem installed on your device"
 
+  timestampNow: ->
+    timestamp = Date.now()
+    return timestamp
+
   handleProxyRequest: (ctx, callback) =>
     # don't interfer with anything not going to the Pokemon API
     return callback() unless ctx.clientToProxyRequest.headers.host is "pgorelease.nianticlabs.com"
@@ -58,10 +63,10 @@ class PokemonGoMITM
 
       for id,request of data.requests
         protoId = changeCase.pascalCase request.request_type
-      
+
         # Queue the ProtoId for the response handling
         requested.push "POGOProtos.Networking.Responses.#{protoId}Response"
-        
+
         proto = "POGOProtos.Networking.Requests.Messages.#{protoId}Message"
         unless proto in POGOProtos.info()
           @log "[-] Request handler for #{protoId} isn't implemented yet.."
@@ -70,11 +75,11 @@ class PokemonGoMITM
         decoded = if request.request_message
           POGOProtos.parse request.request_message, proto
         else {}
-        
+
         if overwrite = @handleRequest protoId, decoded
           @log "[!] Overwriting "+proto
           request.request_message = POGOProtos.serialize overwrite, proto
-  
+
       for message in @messageInjectQueue
         console.log "[+] Injecting request to #{message.action}"
         console.log message.data if message
@@ -87,10 +92,10 @@ class PokemonGoMITM
       @messageInjectQueue = []
 
       @log "[+] Waiting for response..."
-      
+
       unless _.isEqual originalData, data
         buffer = POGOProtos.serialize data, @requestEnvelope
-      
+
       ctx.proxyToServerRequest.write buffer
       callback()
 
@@ -112,7 +117,7 @@ class PokemonGoMITM
         proto = requested[id]
         if proto in POGOProtos.info()
           decoded = POGOProtos.parse response, proto
-          
+
           protoId = proto.split(/\./).pop().split(/Response/)[0]
 
           if overwrite = @handleResponse protoId, decoded
