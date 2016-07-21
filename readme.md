@@ -7,3 +7,8 @@ cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -Dprotobuf_BUILD_TESTS=OFF
 NMake
 
 nmake install
+
+
+## Stuff
+
+Add EV LIBPROTOBUF = path\protobuf-instal
